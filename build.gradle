@@ -11,7 +11,8 @@ base {
 }
 
 repositories {
-	// Loom already adds the required repositories for Minecraft, Yarn, and Fabric
+	// Required for NightConfig
+	mavenCentral()
 }
 
 loom {
@@ -26,13 +27,16 @@ loom {
 }
 
 dependencies {
+	// Minecraft + mappings
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
+	// Fabric
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// TOML config support
+	implementation "com.electronwill.night-config:toml:3.6.6"
 }
 
 processResources {
@@ -71,6 +75,6 @@ publishing {
 	}
 
 	repositories {
-		// configure if/when you publish
+		// Configure if/when you publish
 	}
 }
