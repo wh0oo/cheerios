@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -14,27 +14,18 @@ repositories {
 	mavenCentral()
 }
 
-loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"cheerios" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-}
-
 dependencies {
-	// Minecraft + mappings
+	// Minecraft
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+	// Yarn mappings
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
 	// Fabric
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// NightConfig (TOML) — bundled into the mod jar
+	// NightConfig (bundled into the jar)
 	implementation "com.electronwill.night-config:toml:3.6.6"
 	include "com.electronwill.night-config:toml:3.6.6"
 }
@@ -59,10 +50,8 @@ java {
 }
 
 jar {
-	inputs.property "archivesName", project.base.archivesName
-
 	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}" }
+		rename { "${it}_${project.archives_base_name}" }
 	}
 }
 
@@ -72,9 +61,5 @@ publishing {
 			artifactId = project.archives_base_name
 			from components.java
 		}
-	}
-
-	repositories {
-		// configure if publishing
 	}
 }
