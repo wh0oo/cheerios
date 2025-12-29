@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 version = project.mod_version
@@ -25,41 +26,44 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// NightConfig (bundled into the jar)
+	// NightConfig (will be FLATTENED into the final jar)
 	implementation "com.electronwill.night-config:toml:3.6.6"
-	include "com.electronwill.night-config:toml:3.6.6"
 }
 
 processResources {
 	inputs.property "version", project.version
-
 	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
+		expand "version": project.version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	options.release = 21
 }
 
 java {
 	withSourcesJar()
-
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }
 
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archives_base_name}" }
-	}
+shadowJar {
+	archiveClassifier.set("")
+	configurations = [project.configurations.runtimeClasspath]
+}
+
+tasks.jar {
+	enabled = false
+}
+
+tasks.build {
+	dependsOn shadowJar
 }
 
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
+			artifact shadowJar
 		}
 	}
 }
