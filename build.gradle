@@ -48,8 +48,16 @@ java {
 }
 
 /*
- * Disable Loom's jar + remap pipeline entirely
- * Shadow becomes the ONLY runtime artifact
+ * Shadow config — REQUIRED for Gradle 9
+ */
+shadowJar {
+	archiveClassifier.set("")
+	configurations = [project.configurations.runtimeClasspath]
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+/*
+ * Disable Loom jars
  */
 tasks.jar {
 	enabled = false
@@ -60,15 +68,7 @@ tasks.remapJar {
 }
 
 /*
- * Shadow produces the final mod jar
- */
-shadowJar {
-	archiveClassifier.set("")
-	configurations = [project.configurations.runtimeClasspath]
-}
-
-/*
- * Ensure `build` produces the shaded jar
+ * Ensure build outputs the shaded jar
  */
 tasks.build {
 	dependsOn shadowJar
