@@ -18,15 +18,18 @@ dependencies {
 	// Minecraft
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-	// Yarn mappings
+	// Yarn
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
 	// Fabric
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// NightConfig — EMBEDDED INTO MOD JAR
+	// NightConfig (BOTH required)
+	modImplementation "com.electronwill.night-config:core:3.6.6"
 	modImplementation "com.electronwill.night-config:toml:3.6.6"
+
+	include "com.electronwill.night-config:core:3.6.6"
 	include "com.electronwill.night-config:toml:3.6.6"
 }
 
