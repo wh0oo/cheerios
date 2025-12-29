@@ -26,7 +26,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// NightConfig (will be FLATTENED into the final jar)
+	// NightConfig (flattened)
 	implementation "com.electronwill.night-config:toml:3.6.6"
 }
 
@@ -47,15 +47,29 @@ java {
 	targetCompatibility = JavaVersion.VERSION_21
 }
 
+/*
+ * Disable Loom's jar + remap pipeline entirely
+ * Shadow becomes the ONLY runtime artifact
+ */
+tasks.jar {
+	enabled = false
+}
+
+tasks.remapJar {
+	enabled = false
+}
+
+/*
+ * Shadow produces the final mod jar
+ */
 shadowJar {
 	archiveClassifier.set("")
 	configurations = [project.configurations.runtimeClasspath]
 }
 
-tasks.jar {
-	enabled = false
-}
-
+/*
+ * Ensure `build` produces the shaded jar
+ */
 tasks.build {
 	dependsOn shadowJar
 }
