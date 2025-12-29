@@ -11,7 +11,6 @@ base {
 }
 
 repositories {
-	// Required for NightConfig
 	mavenCentral()
 }
 
@@ -35,8 +34,9 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// TOML config support
+	// NightConfig (TOML) — bundled into the mod jar
 	implementation "com.electronwill.night-config:toml:3.6.6"
+	include "com.electronwill.night-config:toml:3.6.6"
 }
 
 processResources {
@@ -75,6 +75,6 @@ publishing {
 	}
 
 	repositories {
-		// Configure if/when you publish
+		// configure if publishing
 	}
 }
